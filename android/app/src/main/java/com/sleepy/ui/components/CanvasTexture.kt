@@ -124,7 +124,7 @@ fun WatercolorOverlay(
             val nextIndex = (colorIndex + 1).coerceAtMost(gradientColors.size - 1)
             val localProgress = (adjustedProgress * (gradientColors.size - 1)) - colorIndex
 
-            val color = lerp Color(
+            val color = lerp(
                 gradientColors[colorIndex],
                 gradientColors[nextIndex],
                 localProgress

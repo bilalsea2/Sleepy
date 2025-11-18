@@ -173,12 +173,12 @@ private fun PrayerTimesSection(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Baseline
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Isha",
                 style = MaterialTheme.typography.headlineSmall,
-                color = GhibliTheme.colors.textPrimary,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Normal
             )
 
@@ -196,12 +196,12 @@ private fun PrayerTimesSection(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Baseline
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Fajr",
                 style = MaterialTheme.typography.headlineSmall,
-                color = GhibliTheme.colors.textPrimary,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Normal
             )
 
@@ -226,7 +226,7 @@ private fun WakeTimeSection(
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(32.dp),
-            verticalAlignment = Alignment.Baseline
+            verticalAlignment = Alignment.CenterVertically
         ) {
             // Wake time
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
