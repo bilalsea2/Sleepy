@@ -16,8 +16,9 @@ import com.sleepy.ui.components.OrganicSectionDivider
 import com.sleepy.ui.components.PaintedText
 import com.sleepy.ui.components.TexturedBackground
 import com.sleepy.ui.theme.GhibliTheme
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * Main screen - Full-screen, text-focused layout
@@ -93,7 +94,7 @@ fun MainScreen(
 @Composable
 private fun CurrentTimeHeader(location: String) {
     val currentTime = remember {
-        LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
+        SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
     }
 
     Column(
