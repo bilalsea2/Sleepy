@@ -32,6 +32,10 @@ GOOGLE_CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
 GOOGLE_CREDENTIALS_PATH = os.path.join(BASE_DIR, "config", "credentials.json")
 GOOGLE_TOKEN_PATH = os.path.join(BASE_DIR, "config", "token.json")
 
-# Calculation method for non-Uzbekistan locations
-# Using Aladhan API: method=1 is University of Islamic Sciences, Karachi (Hanafi)
-HANAFI_CALCULATION_METHOD = 1
+# Aladhan API Prayer Calculation Settings
+# Method: MWL (Muslim World League) - method=3
+# School: Hanafi - school=1 (for Asr calculation)
+# Midnight Mode: Standard - midnightMode=0
+ALADHAN_CALCULATION_METHOD = 3  # MWL (Muslim World League)
+ALADHAN_SCHOOL = 1  # Hanafi jurisprudence for Asr
+ALADHAN_MIDNIGHT_MODE = 0  # Standard midnight calculation

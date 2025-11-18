@@ -6,7 +6,9 @@ from src.models.database import CachedPrayerTimes, get_session
 from config.settings import (
     NAMOZVAQTI_UZ_BASE_URL,
     ALADHAN_API_BASE_URL,
-    HANAFI_CALCULATION_METHOD,
+    ALADHAN_CALCULATION_METHOD,
+    ALADHAN_SCHOOL,
+    ALADHAN_MIDNIGHT_MODE,
     PRAYER_TIMES_CACHE_DAYS
 )
 
@@ -118,7 +120,8 @@ class PrayerTimesService:
         target_date: date
     ) -> Optional[PrayerTimes]:
         """
-        Fetch prayer times from Aladhan API (Hanafi method)
+        Fetch prayer times from Aladhan API
+        Using MWL method with Hanafi school (angle-based)
         """
         try:
             # Format date as DD-MM-YYYY for Aladhan API
@@ -128,8 +131,9 @@ class PrayerTimesService:
             params = {
                 'latitude': location.latitude,
                 'longitude': location.longitude,
-                'method': HANAFI_CALCULATION_METHOD,
-                'school': 1  # Hanafi school for Asr calculation
+                'method': ALADHAN_CALCULATION_METHOD,  # MWL (Muslim World League)
+                'school': ALADHAN_SCHOOL,  # Hanafi jurisprudence
+                'midnightMode': ALADHAN_MIDNIGHT_MODE  # Standard midnight calculation
             }
 
             response = requests.get(url, params=params, timeout=15)
