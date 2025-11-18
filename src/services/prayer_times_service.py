@@ -44,11 +44,9 @@ class PrayerTimesService:
                 return cached
 
         # Fetch from API
+        # Note: namozvaqti.uz doesn't have a public API, using Aladhan for all locations
         try:
-            if location.is_uzbekistan:
-                prayer_times = self._fetch_from_namozvaqti(location, target_date)
-            else:
-                prayer_times = self._fetch_from_aladhan(location, target_date)
+            prayer_times = self._fetch_from_aladhan(location, target_date)
 
             # Cache the result
             if prayer_times:
@@ -123,9 +121,10 @@ class PrayerTimesService:
         Fetch prayer times from Aladhan API (Hanafi method)
         """
         try:
-            timestamp = int(datetime.combine(target_date, datetime.min.time()).timestamp())
+            # Format date as DD-MM-YYYY for Aladhan API
+            date_str = target_date.strftime('%d-%m-%Y')
 
-            url = f"{ALADHAN_API_BASE_URL}/timings/{timestamp}"
+            url = f"{ALADHAN_API_BASE_URL}/timings/{date_str}"
             params = {
                 'latitude': location.latitude,
                 'longitude': location.longitude,
@@ -133,7 +132,7 @@ class PrayerTimesService:
                 'school': 1  # Hanafi school for Asr calculation
             }
 
-            response = requests.get(url, params=params, timeout=10)
+            response = requests.get(url, params=params, timeout=15)
             response.raise_for_status()
 
             data = response.json()
