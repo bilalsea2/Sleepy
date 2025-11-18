@@ -215,3 +215,20 @@ config/token.json
 # Database
 data/*.db
 data/*.db-journal
+
+# Android / Gradle
+android/.gradle/
+android/.idea/
+android/local.properties
+android/build/
+android/app/build/
+android/captures/
+android/.externalNativeBuild/
+android/.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+android/gradle/wrapper/
+android/gradlew
+android/gradlew.bat
