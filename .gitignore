@@ -207,3 +207,11 @@ marimo/_lsp/
 __marimo__/
 
 settings.local.json
+
+# Google OAuth credentials (keep these secret!)
+config/credentials.json
+config/token.json
+
+# Database
+data/*.db
+data/*.db-journal
