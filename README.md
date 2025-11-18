@@ -177,14 +177,26 @@ Edit `config/settings.py` to customize:
 - `ISHA_BUFFER_MINUTES`: Wait time after Isha (default: 30)
 - `PRAYER_TIMES_CACHE_DAYS`: Cache duration (default: 30)
 
-## Android App (Coming Soon)
+## Android App
 
-The Android app will include:
-- Native Kotlin implementation
+The Android app features a **stunning UI** with Studio Ghibli-inspired aesthetics:
+
+### Beautiful Design
+- **Studio Ghibli color palette**: Warm, dreamy colors inspired by Ghibli films
+- **Canvas/painting texture**: Subtle paper grain and watercolor-like backgrounds
+- **Solarized themes**: Two eye-comfortable themes (Ghibli Meadow & Ghibli Twilight)
+- **Full-screen text layout**: Twitter/X-style information density
+- **Organic elements**: Hand-drawn dividers, soft shadows, painting-like vibes
+
+### Features
+- Native Kotlin with Jetpack Compose
 - Home screen widget
-- Sleep time notifications with creative quotes
+- Sleep time notifications with 100 creative quotes
 - Offline mode support
 - GPS location detection
+- Custom texture shaders for canvas feel
+
+See [ANDROID_GUIDE.md](ANDROID_GUIDE.md) for full UI documentation and implementation details!
 
 ## Database
 

@@ -338,9 +338,131 @@ Add to `AndroidManifest.xml`:
 4. Add dark mode support
 5. Publish to Google Play Store
 
+## UI Design System - Studio Ghibli Aesthetic
+
+### Design Philosophy
+
+The Sleepy app features a unique, beautiful UI inspired by:
+- **Studio Ghibli films**: Warm, dreamy color palettes and organic aesthetics
+- **Solarized color scheme**: Eye-comfortable, carefully balanced contrasts
+- **Canvas/painting texture**: Subtle paper grain and watercolor-like backgrounds
+- **Twitter/X layout**: Full-screen, text-first information density
+
+### Theme Implementation
+
+The app includes **two gorgeous themes** already implemented:
+
+#### Light Theme - "Ghibli Meadow"
+- Base: Warm cream background (#FDF6E3) like aged parchment
+- Accents: Soft sage greens, gentle sky blues, warm peach tones
+- Feel: Sunny afternoon in a Ghibli meadow
+
+#### Dark Theme - "Ghibli Twilight"
+- Base: Deep forest blue-green (#1A1F1E) like moonlit woods
+- Accents: Moonlit greens, twilight blues, warm amber glows
+- Feel: Cozy Ghibli night scene
+
+### Custom UI Components (Already Built!)
+
+All UI components are in `android/app/src/main/java/com/sleepy/ui/`:
+
+#### 1. **GhibliColors.kt** - Color Palette
+- Complete light/dark color schemes
+- Prayer-time specific colors
+- Gradient definitions for watercolor effects
+
+#### 2. **GhibliTheme.kt** - Theme System
+- Material 3 integration
+- Custom typography with generous line-heights (1.6-1.8)
+- Composition locals for theme access
+
+#### 3. **CanvasTexture.kt** - Texture Layers
+- `CanvasTextureLayer`: Subtle canvas weave pattern
+- `WatercolorOverlay`: Organic gradient wash
+- `OrganicDivider`: Hand-drawn style separators
+- Perlin-noise based texture generation
+
+#### 4. **TexturedBackground.kt** - Background System
+- Multi-layer texture composition
+- Vignette effect (darker edges like framed paintings)
+- `PaintedText`: Text with subtle shadows for depth
+
+#### 5. **MainScreen.kt** - Full-Screen Layout
+- Twitter/X-style edge-to-edge design
+- Large, readable typography
+- No cards/boxes - just text on textured canvas
+- Sections: Sleep time, prayer times, wake time, quote
+
+### Using the Theme
+
+```kotlin
+import com.sleepy.ui.theme.GhibliTheme
+
+@Composable
+fun MyApp() {
+    GhibliTheme(darkTheme = false) { // or true for dark theme
+        MainScreen(
+            sleepTime = "19:30",
+            wakeTime = "04:00",
+            fajrTime = "05:30",
+            ishaTime = "19:00",
+            duration = 7.0f,
+            quote = "Your brain cells are begging for a reboot!",
+            location = "Tashkent, Uzbekistan"
+        )
+    }
+}
+```
+
+### Accessing Custom Colors
+
+```kotlin
+import com.sleepy.ui.theme.GhibliTheme
+
+@Composable
+fun MyComponent() {
+    val fajrColor = GhibliTheme.colors.fajrColor
+    val ishaColor = GhibliTheme.colors.ishaColor
+    val sleepColor = GhibliTheme.colors.sleepTimeColor
+
+    Text("Fajr: 05:30", color = fajrColor)
+}
+```
+
+### Texture Intensity Customization
+
+Adjust texture subtlety in `TexturedBackground.kt`:
+
+```kotlin
+CanvasTextureLayer(
+    textureColor = textureColor,
+    intensity = 0.04f,  // 0.02-0.06 range recommended
+    seed = 42
+)
+```
+
+### Typography System
+
+Pre-configured with excellent readability:
+- **Display Large**: 72sp for main sleep time
+- **Headline**: 24-32sp for prayer names
+- **Body Large**: 18sp with 32sp line-height for quotes
+- All with generous spacing and warm, readable tones
+
+### Design Principles
+
+1. **Full-screen text**: No wasted space with excessive chrome
+2. **Organic elements**: Hand-drawn dividers, subtle imperfections
+3. **Canvas texture**: 3-5% opacity, pixel-level variation (not literal paper images)
+4. **Painting vibes**: Watercolor washes, vignettes, soft shadows
+5. **Eye comfort**: Solarized-based colors tested for long reading sessions
+6. **Information hierarchy**: Typography size/weight, not boxes/cards
+
 ## Resources
 
 - [Android Developer Docs](https://developer.android.com/)
 - [Retrofit Documentation](https://square.github.io/retrofit/)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - [App Widgets Overview](https://developer.android.com/guide/topics/appwidgets/overview)
+- [Material 3 Design](https://m3.material.io/)
+- [Solarized Color Scheme](https://ethanschoonover.com/solarized/)
