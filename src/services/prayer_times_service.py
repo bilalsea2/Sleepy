@@ -9,6 +9,7 @@ from config.settings import (
     ALADHAN_CALCULATION_METHOD,
     ALADHAN_SCHOOL,
     ALADHAN_MIDNIGHT_MODE,
+    PRAYER_TIME_SAFETY_BUFFER,
     PRAYER_TIMES_CACHE_DAYS
 )
 
@@ -146,14 +147,15 @@ class PrayerTimesService:
 
             timings = data['data']['timings']
 
+            # Add 15-minute safety buffer to all prayer times
             return PrayerTimes(
                 date=target_date.strftime('%Y-%m-%d'),
-                fajr=timings.get('Fajr', '').split()[0],  # Remove timezone if present
-                sunrise=timings.get('Sunrise', '').split()[0],
-                dhuhr=timings.get('Dhuhr', '').split()[0],
-                asr=timings.get('Asr', '').split()[0],
-                maghrib=timings.get('Maghrib', '').split()[0],
-                isha=timings.get('Isha', '').split()[0],
+                fajr=self._add_time_buffer(timings.get('Fajr', '').split()[0]),
+                sunrise=self._add_time_buffer(timings.get('Sunrise', '').split()[0]),
+                dhuhr=self._add_time_buffer(timings.get('Dhuhr', '').split()[0]),
+                asr=self._add_time_buffer(timings.get('Asr', '').split()[0]),
+                maghrib=self._add_time_buffer(timings.get('Maghrib', '').split()[0]),
+                isha=self._add_time_buffer(timings.get('Isha', '').split()[0]),
                 city=location.city,
                 country=location.country,
                 latitude=location.latitude,
@@ -228,6 +230,32 @@ class PrayerTimesService:
         except Exception as e:
             print(f"Error saving to cache: {e}")
             self.session.rollback()
+
+    def _add_time_buffer(self, time_str: str) -> str:
+        """
+        Add safety buffer to prayer time
+
+        Args:
+            time_str: Time in HH:MM format
+
+        Returns:
+            Time with buffer added in HH:MM format
+        """
+        try:
+            # Parse the time
+            hour, minute = map(int, time_str.split(':'))
+
+            # Create a datetime object for today with this time
+            time_obj = datetime.now().replace(hour=hour, minute=minute, second=0, microsecond=0)
+
+            # Add the safety buffer
+            buffered_time = time_obj + timedelta(minutes=PRAYER_TIME_SAFETY_BUFFER)
+
+            # Return formatted time
+            return buffered_time.strftime('%H:%M')
+        except Exception as e:
+            print(f"Error adding time buffer: {e}")
+            return time_str  # Return original if error
 
     def cleanup_old_cache(self):
         """Remove cached prayer times older than configured days"""

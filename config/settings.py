@@ -20,6 +20,7 @@ MAX_SLEEP_DURATION_HOURS = 7.5
 OPTIMAL_WAKE_TIME_HOUR = 4  # 4 AM pivot point
 
 # Prayer time buffers (minutes)
+PRAYER_TIME_SAFETY_BUFFER = 15  # Add 15 min to all prayer times for safety
 ISHA_BUFFER_MINUTES = 30  # Wait 30 min after Isha before sleeping
 FAJR_BUFFER_MINUTES = 0  # Wake at Fajr or earlier
 
