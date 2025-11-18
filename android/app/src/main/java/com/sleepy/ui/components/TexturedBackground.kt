@@ -43,29 +43,32 @@ fun TexturedBackground(
         // Already applied via .background() above
 
         // Layer 2: Watercolor gradient (optional)
-        if (enableWatercolor) {
-            WatercolorOverlay(
-                modifier = Modifier.fillMaxSize(),
-                gradientColors = getGradientColors(backgroundColor),
-                intensity = 0.03f
-            )
-        }
+        // DISABLED: Too heavy for Android performance
+        // if (enableWatercolor) {
+        //     WatercolorOverlay(
+        //         modifier = Modifier.fillMaxSize(),
+        //         gradientColors = getGradientColors(backgroundColor),
+        //         intensity = 0.03f
+        //     )
+        // }
 
         // Layer 3: Canvas weave texture
-        CanvasTextureLayer(
-            modifier = Modifier.fillMaxSize(),
-            textureColor = textureColor,
-            intensity = 0.04f,
-            seed = 42
-        )
+        // DISABLED: Too heavy for Android performance
+        // CanvasTextureLayer(
+        //     modifier = Modifier.fillMaxSize(),
+        //     textureColor = textureColor,
+        //     intensity = 0.04f,
+        //     seed = 42
+        // )
 
         // Layer 4: Paper grain (finer detail)
-        CanvasTextureLayer(
-            modifier = Modifier.fillMaxSize(),
-            textureColor = grainColor,
-            intensity = 0.02f,
-            seed = 123
-        )
+        // DISABLED: Too heavy for Android performance
+        // CanvasTextureLayer(
+        //     modifier = Modifier.fillMaxSize(),
+        //     textureColor = grainColor,
+        //     intensity = 0.02f,
+        //     seed = 123
+        // )
 
         // Content on top of all texture layers
         content()
