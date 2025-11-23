@@ -73,25 +73,31 @@ private data class GrainPoint(
 private fun DrawScope.drawVignette(isDarkTheme: Boolean) {
     val centerX = size.width / 2
     val centerY = size.height / 2
-    val radius = maxOf(size.width, size.height) * 0.7f
 
-    val vignetteColor = if (isDarkTheme) {
-        Color.Black.copy(alpha = 0.35f)
-    } else {
-        Color(0xFF8B7E70).copy(alpha = 0.15f)
-    }
+    // Create very subtle vignette by darkening only the edges
+    val edgeAlpha = if (isDarkTheme) 0.2f else 0.08f
 
-    // Draw radial gradient manually (outer edge darker)
-    val steps = 100
-    for (i in 0 until steps) {
-        val progress = i.toFloat() / steps
-        val currentRadius = radius * (1f - progress)
-        val alpha = vignetteColor.alpha * progress * progress // Quadratic falloff
+    // Draw darker corners (very subtle)
+    val corners = listOf(
+        Offset(0f, 0f),
+        Offset(size.width, 0f),
+        Offset(0f, size.height),
+        Offset(size.width, size.height)
+    )
+
+    corners.forEach { corner ->
+        val maxDist = kotlin.math.sqrt((size.width * size.width + size.height * size.height).toDouble()).toFloat()
+        val dist = kotlin.math.sqrt(
+            ((corner.x - centerX) * (corner.x - centerX) +
+             (corner.y - centerY) * (corner.y - centerY)).toDouble()
+        ).toFloat()
+
+        val normalizedDist = (dist / maxDist).coerceIn(0f, 1f)
 
         drawCircle(
-            color = vignetteColor.copy(alpha = alpha),
-            radius = size.width,
-            center = Offset(centerX, centerY),
+            color = Color.Black.copy(alpha = edgeAlpha * normalizedDist * 0.5f),
+            radius = size.width * 0.4f,
+            center = corner,
             blendMode = BlendMode.Multiply
         )
     }
