@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m venv:*)",
+      "Bash(.venvScriptsactivate)",
+      "Bash(pip install:*)",
+      "Bash(venvScriptspip.exe install -r requirements.txt)",
+      "Bash(venv/Scripts/pip.exe install:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd project dependencies and setup virtual environment\n\nSet up Python project structure with FastAPI backend, Google Calendar integration, and SQLAlchemy for offline caching. This establishes the foundation for the prayer-aware sleep optimization app.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nImplement complete prayer-aware sleep optimization system\n\nCore Features:\n- Prayer times API integration (namozvaqti.uz + Aladhan API)\n- Smart sleep optimization algorithm with 4 AM productivity pivot\n- GPS-based location detection for Uzbekistan cities\n- Offline caching with SQLite for reliability\n- Google Calendar integration with conflict detection\n- 100 creative sleep notification quotes (supportive + urgent)\n- FastAPI REST backend with comprehensive endpoints\n\nTechnical Implementation:\n- Modular service architecture (prayer times, sleep optimizer, location, calendar)\n- Pydantic models for type safety\n- SQLAlchemy ORM for database operations\n- Configurable settings (sleep duration, buffers, wake times)\n- Full API documentation with FastAPI''s auto-generated docs\n\nDocumentation:\n- Comprehensive README with setup instructions\n- Android app development guide with Kotlin examples\n- Google Calendar API setup guide\n- Architecture overview and API endpoint documentation\n\nNext Steps:\n- Android app implementation (native Kotlin)\n- Home screen widget development\n- Notification system with creative quotes\n- Production deployment guide\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(venv/Scripts/python.exe test_sleepy.py)",
+      "Bash(git commit:*)",
+      "Bash(gh auth:*)",
+      "Bash(git push:*)",
+      "Bash(git remote:*)",
+      "Bash(curl:*)",
+      "Bash(gh repo:*)",
+      "Bash(python:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
