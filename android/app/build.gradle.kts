@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
 }
 
 android {
@@ -19,8 +20,8 @@ android {
             useSupportLibrary = true
         }
 
-        // Default API URL - change this to your computer's IP for testing
-        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8000/\"")
+        // Aladhan API for prayer times
+        buildConfigField("String", "ALADHAN_API_URL", "\"https://api.aladhan.com/v1\"")
     }
 
     buildTypes {
@@ -87,6 +88,14 @@ dependencies {
 
     // Location Services
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
+    // Gson for JSON parsing (Aladhan API)
+    implementation("com.google.code.gson:gson:2.10.1")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

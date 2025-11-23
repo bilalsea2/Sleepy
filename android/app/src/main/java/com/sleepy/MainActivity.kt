@@ -23,7 +23,9 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: SleepViewModel by viewModels()
+    private val viewModel: SleepViewModel by viewModels {
+        androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+    }
     private lateinit var locationHelper: LocationHelper
 
     // Location permission launcher
@@ -45,9 +47,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         locationHelper = LocationHelper(this)
-
-        // Test API connection
-        viewModel.testConnection()
 
         // Request location and fetch schedule
         requestLocationAndFetch()
