@@ -35,7 +35,7 @@ fun MainScreen(
     quote: String = "Your brain cells are begging for a reboot. Give them what they deserve!",
     location: String = "Tashkent, Uzbekistan"
 ) {
-    TexturedBackground(enableWatercolor = true) {
+    TexturedBackground(enablePaperGrain = true) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
