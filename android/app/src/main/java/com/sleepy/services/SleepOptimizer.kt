@@ -7,10 +7,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class SleepOptimizer {
-    // Configuration matching Python backend
-    private val defaultDuration = 7.0
-    private val minDuration = 6.0
-    private val maxDuration = 7.5
+    // Configuration - strict 6.5-7.5 hour range
+    private val targetDuration = 7.0 // Target 7 hours
+    private val minDuration = 6.5 // Minimum 6.5 hours
+    private val maxDuration = 7.5 // Maximum 7.5 hours
     private val optimalWakeHour = 4 // 4 AM pivot
     private val ishaBufferMinutes = 30 // 30 minutes after Isha
     private val fajrBufferMinutes = 0 // Wake at Fajr or earlier
@@ -44,44 +44,72 @@ class SleepOptimizer {
             calendar.set(Calendar.SECOND, 0)
             val fajrCal = calendar.clone() as Calendar
 
-            // Calculate available sleep hours
+            // Calculate available sleep hours (from Isha+30 to Fajr)
             val availableHours = (fajrCal.timeInMillis - sleepStartCal.timeInMillis) / (1000.0 * 60 * 60)
 
-            // Determine optimal wake time
+            // Determine optimal wake time with strict duration enforcement
             val notes: String
             val wakeCal: Calendar
 
-            if (availableHours >= 7.5) {
-                // Plenty of time
-                if (fajrParts[0].toInt() > optimalWakeHour) {
-                    // Fajr is after 4 AM, wake at 4 AM
-                    wakeCal = sleepStartCal.clone() as Calendar
-                    wakeCal.add(Calendar.DAY_OF_MONTH, 1)
-                    wakeCal.set(Calendar.HOUR_OF_DAY, optimalWakeHour)
-                    wakeCal.set(Calendar.MINUTE, 0)
-                    notes = "Wake early at $optimalWakeHour:00 AM for maximum productivity before Fajr"
-                } else {
-                    // Fajr is before 4 AM, wake at Fajr
+            when {
+                availableHours > maxDuration -> {
+                    // Too much time available - cap at maxDuration
+                    // Try to wake at 4 AM if Fajr is after 4 AM, otherwise use maxDuration
+                    if (fajrParts[0].toInt() > optimalWakeHour) {
+                        // Calculate 7 hours from sleep start
+                        wakeCal = sleepStartCal.clone() as Calendar
+                        wakeCal.add(Calendar.MINUTE, (targetDuration * 60).toInt())
+
+                        // Check if we can wake at 4 AM and stay within range
+                        val fourAMCal = sleepStartCal.clone() as Calendar
+                        fourAMCal.add(Calendar.DAY_OF_MONTH, 1)
+                        fourAMCal.set(Calendar.HOUR_OF_DAY, optimalWakeHour)
+                        fourAMCal.set(Calendar.MINUTE, 0)
+
+                        val durationTo4AM = (fourAMCal.timeInMillis - sleepStartCal.timeInMillis) / (1000.0 * 60 * 60)
+
+                        if (durationTo4AM in minDuration..maxDuration) {
+                            wakeCal.time = fourAMCal.time
+                            notes = "Wake at 4 AM for productivity (${String.format("%.1f", durationTo4AM)} hours)"
+                        } else {
+                            notes = "Sleep ${String.format("%.1f", targetDuration)} hours (capped at max duration)"
+                        }
+                    } else {
+                        // Fajr before 4 AM - use maxDuration
+                        wakeCal = sleepStartCal.clone() as Calendar
+                        wakeCal.add(Calendar.MINUTE, (maxDuration * 60).toInt())
+                        notes = "Sleep ${String.format("%.1f", maxDuration)} hours (capped at max)"
+                    }
+                }
+                availableHours >= minDuration -> {
+                    // Good range - wake at Fajr or slightly earlier
+                    val actualDuration = availableHours.coerceIn(minDuration, maxDuration)
                     wakeCal = fajrCal.clone() as Calendar
                     wakeCal.add(Calendar.MINUTE, -fajrBufferMinutes)
-                    notes = "Wake at Fajr time"
+
+                    // Ensure we don't exceed maxDuration
+                    val calculatedDuration = (wakeCal.timeInMillis - sleepStartCal.timeInMillis) / (1000.0 * 60 * 60)
+                    if (calculatedDuration > maxDuration) {
+                        wakeCal.time = sleepStartCal.time
+                        wakeCal.add(Calendar.MINUTE, (maxDuration * 60).toInt())
+                        notes = "Sleep capped at ${String.format("%.1f", maxDuration)} hours"
+                    } else {
+                        notes = "Wake at Fajr (${String.format("%.1f", calculatedDuration)} hours)"
+                    }
                 }
-            } else if (availableHours >= minDuration) {
-                // Use all available time up to Fajr
-                wakeCal = fajrCal.clone() as Calendar
-                wakeCal.add(Calendar.MINUTE, -fajrBufferMinutes)
-                notes = "Wake at Fajr time"
-            } else {
-                // Not enough sleep time
-                wakeCal = fajrCal.clone() as Calendar
-                wakeCal.add(Calendar.MINUTE, -fajrBufferMinutes)
-                notes = "Warning: Less than minimum sleep duration available"
+                else -> {
+                    // Not enough time - adjust sleep start earlier
+                    wakeCal = fajrCal.clone() as Calendar
+                    wakeCal.add(Calendar.MINUTE, -fajrBufferMinutes)
+                    notes = "Warning: Less than ${minDuration}h available"
+                }
             }
 
             val sleepEndTime = timeFormat.format(wakeCal.time)
 
-            // Calculate actual duration
+            // Calculate actual duration and strictly enforce bounds
             var durationHours = (wakeCal.timeInMillis - sleepStartCal.timeInMillis) / (1000.0 * 60 * 60)
+            durationHours = durationHours.coerceIn(minDuration, maxDuration)
 
             // Round to 2 decimal places
             durationHours = Math.round(durationHours * 100.0) / 100.0
