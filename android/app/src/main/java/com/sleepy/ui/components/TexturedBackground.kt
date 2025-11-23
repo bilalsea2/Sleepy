@@ -1,6 +1,7 @@
 package com.sleepy.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -15,62 +16,34 @@ import com.sleepy.ui.theme.GhibliTheme
 import kotlin.math.sin
 
 /**
- * Main textured background component
- * Combines all texture layers for painting/canvas aesthetic
+ * Main textured background component with optimized paper grain effect
+ * Ghibli-inspired aesthetic with performance optimization
  */
 @Composable
 fun TexturedBackground(
     modifier: Modifier = Modifier,
-    enableWatercolor: Boolean = true,
+    enablePaperGrain: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
-    val textureColor = GhibliTheme.colors.canvasTexture
-    val grainColor = GhibliTheme.colors.paperGrain
+    val isDarkTheme = isSystemInDarkTheme()
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(backgroundColor)
-            .then(
-                // Add subtle vignette effect (darker edges like old paintings)
-                Modifier.drawBehind {
-                    drawVignette(this)
-                }
-            )
     ) {
-        // Layer 1: Base background (solid color)
-        // Already applied via .background() above
+        // Layer 1: Base background color (solid Ghibli color)
 
-        // Layer 2: Watercolor gradient (optional)
-        // DISABLED: Too heavy for Android performance
-        // if (enableWatercolor) {
-        //     WatercolorOverlay(
-        //         modifier = Modifier.fillMaxSize(),
-        //         gradientColors = getGradientColors(backgroundColor),
-        //         intensity = 0.03f
-        //     )
-        // }
+        // Layer 2: Optimized paper grain effect with vignette
+        if (enablePaperGrain) {
+            PaperGrainEffect(
+                modifier = Modifier.fillMaxSize(),
+                isDarkTheme = isDarkTheme
+            )
+        }
 
-        // Layer 3: Canvas weave texture
-        // DISABLED: Too heavy for Android performance
-        // CanvasTextureLayer(
-        //     modifier = Modifier.fillMaxSize(),
-        //     textureColor = textureColor,
-        //     intensity = 0.04f,
-        //     seed = 42
-        // )
-
-        // Layer 4: Paper grain (finer detail)
-        // DISABLED: Too heavy for Android performance
-        // CanvasTextureLayer(
-        //     modifier = Modifier.fillMaxSize(),
-        //     textureColor = grainColor,
-        //     intensity = 0.02f,
-        //     seed = 123
-        // )
-
-        // Content on top of all texture layers
+        // Layer 3: Content on top
         content()
     }
 }

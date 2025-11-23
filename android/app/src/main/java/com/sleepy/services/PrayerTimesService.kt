@@ -23,12 +23,15 @@ class PrayerTimesService(context: Context) {
         .readTimeout(15, TimeUnit.SECONDS)
         .build()
 
-    // Configuration matching Python backend
+    // Configuration
     private val aladhanMethod = 3 // MWL (Muslim World League)
     private val aladhanSchool = 1 // Hanafi jurisprudence
     private val aladhanMidnightMode = 0 // Standard midnight calculation
-    private val safetyBufferMinutes = 15 // 15-minute safety buffer
     private val cacheDays = 30 // Cache for 30 days
+
+    // Safety buffers (minutes)
+    private val safetyBufferMinutes = 5  // +5 minutes to all prayer times except sunrise
+    private val sunriseBufferMinutes = -5 // -5 minutes to sunrise
 
     suspend fun getPrayerTimes(
         city: String,
@@ -48,9 +51,16 @@ class PrayerTimesService(context: Context) {
                 }
             }
 
-            // Fetch from Aladhan API
-            Log.d("PrayerTimesService", "Fetching prayer times from Aladhan API for $city on $date")
-            val prayerTimes = fetchFromAladhan(city, country, latitude, longitude, date)
+            // Choose API based on location
+            Log.d("PrayerTimesService", "Fetching prayer times for $city on $date")
+            val prayerTimes = if (city.equals("Tashkent", ignoreCase = true) ||
+                                   city.equals("Toshkent", ignoreCase = true)) {
+                // Use namoz-vaqti.uz for Tashkent
+                fetchFromNamozVaqti(date) ?: fetchFromAladhan(city, country, latitude, longitude, date)
+            } else {
+                // Use Aladhan for other locations
+                fetchFromAladhan(city, country, latitude, longitude, date)
+            }
 
             if (prayerTimes != null) {
                 // Save to cache
@@ -122,12 +132,12 @@ class PrayerTimesService(context: Context) {
             // Extract times and add safety buffer
             PrayerTimes(
                 date = date,
-                fajr = addTimeBuffer(timings.get("Fajr").asString.split(" ")[0]),
-                sunrise = addTimeBuffer(timings.get("Sunrise").asString.split(" ")[0]),
-                dhuhr = addTimeBuffer(timings.get("Dhuhr").asString.split(" ")[0]),
-                asr = addTimeBuffer(timings.get("Asr").asString.split(" ")[0]),
-                maghrib = addTimeBuffer(timings.get("Maghrib").asString.split(" ")[0]),
-                isha = addTimeBuffer(timings.get("Isha").asString.split(" ")[0]),
+                fajr = addTimeBuffer(timings.get("Fajr").asString.split(" ")[0], safetyBufferMinutes),
+                sunrise = addTimeBuffer(timings.get("Sunrise").asString.split(" ")[0], sunriseBufferMinutes),
+                dhuhr = addTimeBuffer(timings.get("Dhuhr").asString.split(" ")[0], safetyBufferMinutes),
+                asr = addTimeBuffer(timings.get("Asr").asString.split(" ")[0], safetyBufferMinutes),
+                maghrib = addTimeBuffer(timings.get("Maghrib").asString.split(" ")[0], safetyBufferMinutes),
+                isha = addTimeBuffer(timings.get("Isha").asString.split(" ")[0], safetyBufferMinutes),
                 city = city,
                 country = country,
                 latitude = latitude,
@@ -139,7 +149,58 @@ class PrayerTimesService(context: Context) {
         }
     }
 
-    private fun addTimeBuffer(timeStr: String): String {
+    private suspend fun fetchFromNamozVaqti(date: String): PrayerTimes? = withContext(Dispatchers.IO) {
+        try {
+            // namoz-vaqti.uz API for Tashkent
+            val url = "https://namoz-vaqti.uz/?format=json&lang=lotin&period=week&region=toshkent-shahri"
+
+            Log.d("PrayerTimesService", "Namoz-vaqti.uz URL: $url")
+
+            val request = Request.Builder()
+                .url(url)
+                .build()
+
+            val response = client.newCall(request).execute()
+
+            if (!response.isSuccessful) {
+                Log.e("PrayerTimesService", "Namoz-vaqti.uz API error: ${response.code}")
+                return@withContext null
+            }
+
+            val responseBody = response.body?.string()
+            if (responseBody == null) {
+                Log.e("PrayerTimesService", "Empty response from namoz-vaqti.uz")
+                return@withContext null
+            }
+
+            val jsonObject = JsonParser.parseString(responseBody).asJsonObject
+
+            // Find today's times
+            val today = jsonObject.getAsJsonObject("today")
+            val times = today.getAsJsonObject("times")
+
+            // Extract prayer times with buffers
+            // Mapping: bomdod=Fajr, quyosh=Sunrise, peshin=Dhuhr, asr=Asr, shom=Maghrib, xufton=Isha
+            PrayerTimes(
+                date = date,
+                fajr = addTimeBuffer(times.get("bomdod").asString, safetyBufferMinutes),
+                sunrise = addTimeBuffer(times.get("quyosh").asString, sunriseBufferMinutes),
+                dhuhr = addTimeBuffer(times.get("peshin").asString, safetyBufferMinutes),
+                asr = addTimeBuffer(times.get("asr").asString, safetyBufferMinutes),
+                maghrib = addTimeBuffer(times.get("shom").asString, safetyBufferMinutes),
+                isha = addTimeBuffer(times.get("xufton").asString, safetyBufferMinutes),
+                city = "Tashkent",
+                country = "Uzbekistan",
+                latitude = 41.2995,
+                longitude = 69.2401
+            )
+        } catch (e: Exception) {
+            Log.e("PrayerTimesService", "Error fetching from namoz-vaqti.uz", e)
+            null
+        }
+    }
+
+    private fun addTimeBuffer(timeStr: String, bufferMinutes: Int = safetyBufferMinutes): String {
         return try {
             val parts = timeStr.split(":")
             val hour = parts[0].toInt()
@@ -148,7 +209,7 @@ class PrayerTimesService(context: Context) {
             val calendar = Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, hour)
                 set(Calendar.MINUTE, minute)
-                add(Calendar.MINUTE, safetyBufferMinutes)
+                add(Calendar.MINUTE, bufferMinutes)
             }
 
             String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))

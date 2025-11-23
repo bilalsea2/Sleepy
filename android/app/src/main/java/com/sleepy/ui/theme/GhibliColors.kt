@@ -9,26 +9,27 @@ import androidx.compose.ui.graphics.Color
 
 // Light Theme - "Ghibli Meadow"
 // Inspired by sunny fields, clear skies, and warm afternoons
+// Enhanced contrast for better readability
 object GhibliLightColors {
-    // Base colors (Solarized-inspired)
-    val Background = Color(0xFFFDF6E3)      // Warm cream, like aged paper
-    val Surface = Color(0xFFFAF3DD)         // Slightly warmer surface
-    val SurfaceVariant = Color(0xFFF5EDD1)  // Even warmer for emphasis
+    // Base colors (Solarized-inspired with more contrast)
+    val Background = Color(0xFFFDF8E8)      // Warmer cream with more yellow
+    val Surface = Color(0xFFFFF9E5)         // Lighter, more pronounced
+    val SurfaceVariant = Color(0xFFFFF4D6)  // Golden highlight
 
-    // Primary colors (Ghibli greens - nature, life, growth)
-    val Primary = Color(0xFF7BA05B)         // Soft sage green (grass in sunlight)
-    val PrimaryVariant = Color(0xFF9CB380)  // Lighter sage
-    val PrimaryDark = Color(0xFF5A7A45)     // Deeper forest
+    // Primary colors (Vibrant Ghibli greens)
+    val Primary = Color(0xFF6B9B47)         // More saturated grass green
+    val PrimaryVariant = Color(0xFF8FB86E)  // Brighter sage
+    val PrimaryDark = Color(0xFF4A7A2F)     // Deep forest with contrast
 
-    // Secondary colors (Sky and water)
-    val Secondary = Color(0xFF88B3D0)       // Gentle sky blue
-    val SecondaryVariant = Color(0xFFA8C9DC) // Lighter sky
-    val Accent = Color(0xFFE8A87C)          // Warm peach/sunset
+    // Secondary colors (Brighter sky and accents)
+    val Secondary = Color(0xFF5FA8D3)       // More vibrant sky blue
+    val SecondaryVariant = Color(0xFF8FC5E8) // Lighter bright sky
+    val Accent = Color(0xFFE89A5D)          // Stronger sunset orange
 
-    // Text colors
-    val TextPrimary = Color(0xFF3C3632)     // Warm dark charcoal
-    val TextSecondary = Color(0xFF6B6560)   // Medium warm gray
-    val TextTertiary = Color(0xFF9B9490)    // Light warm gray
+    // Text colors (Higher contrast)
+    val TextPrimary = Color(0xFF2A2520)     // Darker, more readable
+    val TextSecondary = Color(0xFF5A4F45)   // Deeper medium gray
+    val TextTertiary = Color(0xFF8B7E70)    // Visible light gray
 
     // Prayer time specific
     val Fajr = Color(0xFF88B3D0)            // Morning sky blue
@@ -47,26 +48,27 @@ object GhibliLightColors {
 
 // Dark Theme - "Ghibli Twilight"
 // Inspired by moonlit forests, starry skies, and cozy nights
+// Enhanced contrast for better nighttime readability
 object GhibliDarkColors {
-    // Base colors (Solarized dark-inspired)
-    val Background = Color(0xFF1A1F1E)      // Deep forest at night (warmer than pure black)
-    val Surface = Color(0xFF222827)         // Slightly lighter surface
-    val SurfaceVariant = Color(0xFF2A302E)  // Even lighter for emphasis
+    // Base colors (Richer dark tones)
+    val Background = Color(0xFF15191A)      // Deep night sky (almost black but warm)
+    val Surface = Color(0xFF1E2425)         // Lighter surface with more contrast
+    val SurfaceVariant = Color(0xFF2A3133)  // Clear elevation difference
 
-    // Primary colors (Moonlit nature)
-    val Primary = Color(0xFF9CB380)         // Soft moonlit green
-    val PrimaryVariant = Color(0xFFB8CFA0)  // Lighter, glowing green
+    // Primary colors (Glowing moonlit nature)
+    val Primary = Color(0xFFA5D07E)         // Brighter moonlit green
+    val PrimaryVariant = Color(0xFFC5E8A5)  // Very light, glowing green
     val PrimaryDark = Color(0xFF7BA05B)     // Standard green
 
-    // Secondary colors (Night sky and twilight)
-    val Secondary = Color(0xFF7A9BB8)       // Twilight blue
-    val SecondaryVariant = Color(0xFF95B0CA) // Lighter twilight
-    val Accent = Color(0xFFE8B896)          // Warm candlelight/amber
+    // Secondary colors (Twilight and starlight)
+    val Secondary = Color(0xFF6BA3D3)       // Brighter twilight blue
+    val SecondaryVariant = Color(0xFF95C4E8) // Lighter starlight blue
+    val Accent = Color(0xFFFFBE7D)          // Warm golden glow
 
-    // Text colors (soft, not harsh white)
-    val TextPrimary = Color(0xFFF5EDD1)     // Warm cream (gentle on eyes)
-    val TextSecondary = Color(0xFFD4C9B8)   // Medium cream
-    val TextTertiary = Color(0xFFA89F8F)    // Muted warm gray
+    // Text colors (Higher contrast for dark mode)
+    val TextPrimary = Color(0xFFFFFBF0)     // Near-white warm cream
+    val TextSecondary = Color(0xFFE8DCC8)   // Clear medium cream
+    val TextTertiary = Color(0xFFC5B8A5)    // Visible muted gray
 
     // Prayer time specific (glowing at night)
     val Fajr = Color(0xFF95B0CA)            // Pre-dawn blue
