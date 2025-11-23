@@ -30,8 +30,8 @@ class PrayerTimesService(context: Context) {
     private val cacheDays = 30 // Cache for 30 days
 
     // Safety buffers (minutes)
-    private val safetyBufferMinutes = 5  // +5 minutes to all prayer times except sunrise
-    private val sunriseBufferMinutes = -5 // -5 minutes to sunrise
+    private val safetyBufferMinutes = 10  // +10 minutes to all prayer times except sunrise
+    private val sunriseBufferMinutes = -10 // -10 minutes to sunrise
 
     suspend fun getPrayerTimes(
         city: String,
